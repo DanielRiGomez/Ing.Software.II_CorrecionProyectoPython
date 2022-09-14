@@ -2,7 +2,7 @@ import smtplib
 from email.message import EmailMessage
 import datetime
 
-class LogMail():
+class ConnectorMail():
 
    def __init__(self,receiver_email_address,nivel, message, object):
       self.receiver_email_address=receiver_email_address
