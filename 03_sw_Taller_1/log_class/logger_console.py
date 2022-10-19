@@ -1,5 +1,4 @@
 from colorama import init, Fore
-from colorama import init, Fore
 
 import datetime as dt
 import log_class.logger as lg

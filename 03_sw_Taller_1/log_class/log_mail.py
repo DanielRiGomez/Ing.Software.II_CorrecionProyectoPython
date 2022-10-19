@@ -21,10 +21,25 @@ class LogMail():
       email_password = "clavequegeneragmail" 
 
       now = datetime.datetime.today().strftime("%Y%m%d-%H%M%S")
+         
+      color_scheme = self.set_email_color()
+      fondo = color_scheme["fondo"]
+      color = color_scheme["color"]
+      wrapper  = self.create_email_body()
+      file_content =  wrapper % (fondo,color,now,self.nivel,self.message,self.object)
 
-      fondo = 'RED'
-      color = 'BLUE'
+      message.set_content(file_content, subtype='html')
 
+      server = smtplib.SMTP(email_smtp, '587') 
+      server.ehlo() 
+      server.starttls() 
+      server.login(self.sender_email_address, email_password) 
+      server.send_message(message) 
+      server.quit()
+
+   def set_email_color(self):
+      color = "BLUE"
+      fondo = "RED"
       if self.nivel == 'INFO':
          fondo = 'RED'
          color = 'BLUE'
@@ -37,8 +52,14 @@ class LogMail():
       elif self.nivel == 'DEBUG':
          fondo = 'BLACK'
          color = 'MAGENTA'
-         
-      wrapper  = """
+      color_scheme = {
+         "color" : color,
+         "fondo" : fondo
+      }
+      return color_scheme
+
+   def create_email_body(self):
+      return """
       <!DOCTYPE html> 
       <head> 
       </head>    
@@ -48,13 +69,3 @@ class LogMail():
          </body> 
       </html>
       """
-      file_content =  wrapper % (fondo,color,now,self.nivel,self.message,self.object)
-
-      message.set_content(file_content, subtype='html')
-
-      server = smtplib.SMTP(email_smtp, '587') 
-      server.ehlo() 
-      server.starttls() 
-      server.login(self.sender_email_address, email_password) 
-      server.send_message(message) 
-      server.quit()
